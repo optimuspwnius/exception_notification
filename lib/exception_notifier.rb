@@ -1,7 +1,6 @@
 require 'logger'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/module/attribute_accessors'
-#require 'exception_notifier/base_notifier'
 
 module ExceptionNotifier
 
@@ -16,13 +15,9 @@ module ExceptionNotifier
   @@logger = Logger.new(STDOUT)
 
   class << self
-    
-    @@notifiers = {
-      email: ExceptionNotifier::EmailNotifier.new
-    }
 
     def notify_exception(exception, options = {}, &block)
-      @@notifiers[:email].call(exception, options.dup, &block)
+      ExceptionNotifier::EmailNotifier.new.call(exception, options.dup, &block)
       true
     rescue Exception => e
       logger.warn("An error occurred when sending a notification using the email notifier. #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
