@@ -194,8 +194,8 @@ module ExceptionNotifier
     call_without_patch(exception, options)
   end
 
-  alias_method(:call_without_patch, :call)
-  alias_method(:call, :call_with_patch)
+  #alias_method(:call_without_patch, :call)
+  #alias_method(:call, :call_with_patch)
 
     private
 
