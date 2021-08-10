@@ -11,7 +11,7 @@ module ExceptionNotifier
       sender_address: %("Exception Notifier" <exception.notifier@example.com>),
       exception_recipients: [],
       email_prefix: '[ERROR] ',
-      email_format: :text,
+      email_format: :html,
       sections: %w[request session environment backtrace],
       background_sections: %w[backtrace data],
       verbose_subject: true,
@@ -115,7 +115,7 @@ module ExceptionNotifier
           end
 
           def html_mail?
-            @options[:email_format] == :html
+            true
           end
 
           def compose_email
@@ -133,8 +133,7 @@ module ExceptionNotifier
             }.merge(@options[:email_headers])
 
             mail = mail(headers) do |format|
-              format.text
-              format.html if html_mail?
+              format.html
             end
 
             mail.delivery_method.settings.merge!(@options[:mailer_settings]) if @options[:mailer_settings]
