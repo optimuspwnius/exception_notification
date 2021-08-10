@@ -36,7 +36,7 @@ module ExceptionNotifier
           append_view_path "#{File.dirname(__FILE__)}/views"
 
           def exception_notification(env, exception, options = {}, default_options = {})
-            load_custom_views
+            prepend_view_path "#{Rails.root}/app/views"
 
             @env        = env
             @exception  = exception
@@ -56,7 +56,7 @@ module ExceptionNotifier
           end
 
           def background_exception_notification(exception, options = {}, default_options = {})
-            load_custom_views
+            prepend_view_path "#{Rails.root}/app/views"
 
             @exception = exception
             @options   = default_options.merge(options).symbolize_keys
@@ -122,15 +122,6 @@ module ExceptionNotifier
             mail.delivery_method.settings.merge!(@options[:mailer_settings]) if @options[:mailer_settings]
 
             mail
-          end
-
-          def load_custom_views
-            logger = Logger.new(STDOUT)
-            logger.info defined?(Rails)
-            logger.info Rails.respond_to?(:root)
-            return unless defined?(Rails) and Rails.respond_to?(:root)
-            logger.info Rails.root.nil? ? 'app/views' : "#{Rails.root}/app/views"
-            prepend_view_path Rails.root.nil? ? 'app/views' : "#{Rails.root}/app/views"
           end
 
           def maybe_call(maybe_proc)
