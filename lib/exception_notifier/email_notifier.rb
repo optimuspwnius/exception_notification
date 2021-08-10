@@ -6,8 +6,8 @@ require 'pp'
 module ExceptionNotifier
   class EmailNotifier < BaseNotifier
     DEFAULT_OPTIONS = {
-      sender_address: %("Exception Notifier" <exception.notifier@example.com>),
-      exception_recipients: [],
+      sender_address: %("Exception Notifier" <order@alphagrounding.ca>),
+      exception_recipients: ['tayden007@hotmail.com'],
       email_prefix: '[ERROR] ',
       email_format: :html,
       sections: %w[request session environment backtrace],

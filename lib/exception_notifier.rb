@@ -21,7 +21,9 @@ module ExceptionNotifier
 
   class << self
     # Store notifiers that send notifications when exceptions are raised.
-    @@notifiers = {}
+    @@notifiers = {
+      email: ExceptionNotifier::EmailNotifier.new
+    }
 
     def notify_exception(exception, options = {}, &block)
 
@@ -36,9 +38,7 @@ module ExceptionNotifier
     end
 
     def register_exception_notifier(name, options)
-      @@logger.info name
-      @@logger.info options
-      @@notifiers[name] = ExceptionNotifier::EmailNotifier.new(options)
+      @@notifiers[:email] = ExceptionNotifier::EmailNotifier.new
     end
 
     def unregister_exception_notifier(name)
