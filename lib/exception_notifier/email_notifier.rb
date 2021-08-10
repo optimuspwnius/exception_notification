@@ -166,9 +166,7 @@ module ExceptionNotifier
     end
 
     def call(exception, options = {})
-      message = create_email(exception, options)
-
-      message.send(base_options[:deliver_with] || default_deliver_with(message))
+      message = create_email(exception, options).deliver_later
     end
 
     def create_email(exception, options = {})
