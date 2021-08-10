@@ -105,7 +105,7 @@ module ExceptionNotifier
             subject.length > 120 ? subject[0...120] + '...' : subject
 
             name = @env.nil? ? 'background_exception_notification' : 'exception_notification'
-            exception_recipients = maybe_call(@options[:exception_recipients])
+            exception_recipients = @options[:exception_recipients]
 
             headers = {
               delivery_method: @options[:delivery_method],
@@ -124,11 +124,6 @@ module ExceptionNotifier
             mail
           end
 
-          def maybe_call(maybe_proc)
-            logger = Logger.new STDOUT
-            logger.info maybe_proc.respond_to?(:call)
-            maybe_proc.respond_to?(:call) ? maybe_proc.call : maybe_proc
-          end
         end
       end
     end
