@@ -23,20 +23,12 @@ module ExceptionNotifier
     }
 
     def notify_exception(exception, options = {}, &block)
-      fire_notification(@@notifiers[:email], exception, options.dup, &block)
+      @@notifiers[:email].call(exception, options.dup, &block)
       true
-    end
-
-    private
-
-    def fire_notification(notifier_name, exception, options, &block)
-      @@notifiers[:email].call(exception, options, &block)
     rescue Exception => e
-      logger.warn(
-        "An error occurred when sending a notification using the email notifier." \
-        "#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
-      )
+      logger.warn("An error occurred when sending a notification using the email notifier. #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
       false
     end
+    
   end
 end
