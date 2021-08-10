@@ -1,0 +1,7 @@
+ul style="list-style: none"
+  li
+    strong session_id: 
+    span = @request.ssl? ? "[FILTERED]" : (@request.session['session_id'] || (@request.env["rack.session.options"] and @request.env["rack.session.options"][:id]).inspect)
+  li
+    strong data: 
+    span = PP.pp @request.session.to_hash, ""

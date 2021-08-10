@@ -1,0 +1,26 @@
+ul style="list-style: none"
+  li
+    strong URL:
+    span = @request.url
+  li
+    strong HTTP Method:
+    span = @request.request_method
+  li
+    strong IP Address:
+    span = @request.remote_ip
+  li
+    strong Parameters:
+    span = @request.filtered_parameters.inspect
+  li
+    strong Timestamp:
+    span = @timestamp
+  li
+    strong Server:
+    span = Socket.gethostname
+  - if defined?(Rails) && Rails.respond_to?(:root)
+    li
+      strong Rails root:
+      span = Rails.root
+  li
+    strong Process:
+    span = $$ 
