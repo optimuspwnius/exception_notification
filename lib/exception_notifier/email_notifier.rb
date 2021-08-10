@@ -14,7 +14,6 @@ module ExceptionNotifier
       background_sections: %w[backtrace data],
       verbose_subject: true,
       normalize_subject: false,
-      include_controller_and_action_names_in_subject: true,
       delivery_method: nil,
       mailer_settings: nil,
       email_headers: {},
@@ -64,7 +63,7 @@ module ExceptionNotifier
             @timestamp = Time.current
             @sections  = @options[:background_sections]
             @data      = options[:data] || {}
-            @env = @kontroller = nil
+            @env       = @kontroller = nil
 
             compose_email
           end
@@ -98,11 +97,10 @@ module ExceptionNotifier
 
             # Compose subject
             subject = @options[:email_prefix].to_s.dup
-            subject << "#{@kontroller.controller_name}##{@kontroller.action_name}" if @kontroller and @options[:include_controller_and_action_names_in_subject]
+            subject << "#{@kontroller.controller_name}##{@kontroller.action_name}" if @kontroller
             subject << " (#{@exception.class})"
             subject << " #{@exception.message.inspect}" if @options[:verbose_subject]
-            subject = EmailNotifier.normalize_digits(subject) if @options[:normalize_subject]
-            subject.length > 120 ? subject[0...120] + '...' : subject
+            subject = subject.length > 120 ? (subject[0...120] + '...') : subject
 
             name = @env.nil? ? 'background_exception_notification' : 'exception_notification'
             exception_recipients = @options[:exception_recipients]
@@ -146,10 +144,6 @@ module ExceptionNotifier
       else
         mailer.exception_notification(options[:env], exception, options, base_options).deliver_now
       end
-    end
-
-    def self.normalize_digits(string)
-      string.gsub(/[0-9]+/, 'N')
     end
 
   end
