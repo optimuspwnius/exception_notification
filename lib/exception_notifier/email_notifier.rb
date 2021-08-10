@@ -197,7 +197,6 @@ module ExceptionNotifier
     end
 
     def default_deliver_with(message)
-      # FIXME: use `if Gem::Version.new(ActionMailer::VERSION::STRING) < Gem::Version.new('4.1')`
       message.respond_to?(:deliver_now) ? :deliver_now : :deliver
     end
   end
