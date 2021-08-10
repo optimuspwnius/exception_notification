@@ -71,26 +71,6 @@ module ExceptionNotifier
 
           private
 
-          def compose_subject
-            subject = @options[:email_prefix].to_s.dup
-            subject << "(#{@options[:accumulated_errors_count]} times)" if @options[:accumulated_errors_count].to_i > 1
-            subject << "#{@kontroller.controller_name}##{@kontroller.action_name}" if include_controller?
-            subject << " (#{@exception.class})"
-            subject << " #{@exception.message.inspect}" if @options[:verbose_subject]
-            subject = EmailNotifier.normalize_digits(subject) if @options[:normalize_subject]
-            subject.length > 120 ? subject[0...120] + '...' : subject
-          end
-
-          def include_controller?
-            @kontroller && @options[:include_controller_and_action_names_in_subject]
-          end
-
-          def set_data_variables
-            @data.each do |name, value|
-              instance_variable_set("@#{name}", value)
-            end
-          end
-
           helper_method :inspect_object
 
           def truncate(string, max)
@@ -113,8 +93,17 @@ module ExceptionNotifier
           end
 
           def compose_email
-            set_data_variables
-            subject = compose_subject
+            # Set data variables
+            @data.each do |name, value| instance_variable_set("@#{name}", value) end
+
+            # Compose subject
+            subject = @options[:email_prefix].to_s.dup
+            subject << "#{@kontroller.controller_name}##{@kontroller.action_name}" if @kontroller and @options[:include_controller_and_action_names_in_subject]
+            subject << " (#{@exception.class})"
+            subject << " #{@exception.message.inspect}" if @options[:verbose_subject]
+            subject = EmailNotifier.normalize_digits(subject) if @options[:normalize_subject]
+            subject.length > 120 ? subject[0...120] + '...' : subject
+
             name = @env.nil? ? 'background_exception_notification' : 'exception_notification'
             exception_recipients = maybe_call(@options[:exception_recipients])
 
@@ -136,8 +125,11 @@ module ExceptionNotifier
           end
 
           def load_custom_views
-            return unless defined?(Rails) && Rails.respond_to?(:root)
-
+            logger = Logger.new(STDOUT)
+            logger.info defined?(Rails)
+            logger.info Rails.respond_to?(:root)
+            return unless defined?(Rails) and Rails.respond_to?(:root)
+            logger.info Rails.root.nil? ? 'app/views' : "#{Rails.root}/app/views"
             prepend_view_path Rails.root.nil? ? 'app/views' : "#{Rails.root}/app/views"
           end
 
@@ -170,21 +162,6 @@ module ExceptionNotifier
 
     def self.normalize_digits(string)
       string.gsub(/[0-9]+/, 'N')
-    end
-
-    private
-
-    def mailer
-      #{:sender_address=>"\"Exception Notifier\" <order@alphagrounding.ca>", :exception_recipients=>["tayden007@hotmail.com"], :email_prefix=>"[ERROR] ", :email_format=>:html, :sections=>["request", "session", "environment", "backtrace"], :background_sections=>["backtrace", "data"], :verbose_subject=>true, :normalize_subject=>false, :include_controller_and_action_names_in_subject=>true, :delivery_method=>nil, :mailer_settings=>nil, :email_headers=>{}, :mailer_parent=>"ActionMailer::Base", :template_path=>"exception_notifier", :deliver_with=>nil}
-
-      #logger = Logger.new(STDOUT)
-      #logger.info base_options
-      #logger.info base_options[:mailer_parent].constantize # ActionMailer::Base
-      #logger.info base_options[:template_path] # exception_notifier
-      @mailer ||= Class.new(ActionMailer::Base).tap do |mailer|
-        mailer.extend(EmailNotifier::Mailer)
-        mailer.mailer_name = base_options[:template_path]
-      end
     end
 
   end
