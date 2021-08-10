@@ -156,11 +156,11 @@ module ExceptionNotifier
     end
 
     def call(exception, options = {})
-      mailer = ActionMailer::Base.new.tap do |settings|
+      mailer = Class.new(ActionMailer::Base).tap do |settings|
         settings.extend EmailNotifier::Mailer
         settings.mailer_name = base_options[:template_path]
       end
-      
+
       if options[:env].nil?
         mailer.background_exception_notification(exception, options, base_options).deliver_now
       else
@@ -170,6 +170,21 @@ module ExceptionNotifier
 
     def self.normalize_digits(string)
       string.gsub(/[0-9]+/, 'N')
+    end
+
+    private
+
+    def mailer
+      #{:sender_address=>"\"Exception Notifier\" <order@alphagrounding.ca>", :exception_recipients=>["tayden007@hotmail.com"], :email_prefix=>"[ERROR] ", :email_format=>:html, :sections=>["request", "session", "environment", "backtrace"], :background_sections=>["backtrace", "data"], :verbose_subject=>true, :normalize_subject=>false, :include_controller_and_action_names_in_subject=>true, :delivery_method=>nil, :mailer_settings=>nil, :email_headers=>{}, :mailer_parent=>"ActionMailer::Base", :template_path=>"exception_notifier", :deliver_with=>nil}
+
+      #logger = Logger.new(STDOUT)
+      #logger.info base_options
+      #logger.info base_options[:mailer_parent].constantize # ActionMailer::Base
+      #logger.info base_options[:template_path] # exception_notifier
+      @mailer ||= Class.new(ActionMailer::Base).tap do |mailer|
+        mailer.extend(EmailNotifier::Mailer)
+        mailer.mailer_name = base_options[:template_path]
+      end
     end
 
   end
