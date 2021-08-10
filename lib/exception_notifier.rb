@@ -35,16 +35,9 @@ module ExceptionNotifier
       notification_fired
     end
 
-    def register_exception_notifier(name, notifier_or_options)
-      if notifier_or_options.respond_to?(:call)
-        @@notifiers[name] = notifier_or_options
-      elsif notifier_or_options.is_a?(Hash)
-        create_and_register_notifier(name, notifier_or_options)
-      else
-        raise ArgumentError, "Invalid notifier '#{name}' defined as #{notifier_or_options.inspect}"
-      end
+    def register_exception_notifier(name, options)
+      @@notifiers[name] = ExceptionNotifier::EmailNotifier.new(options)
     end
-    alias add_notifier register_exception_notifier
 
     def unregister_exception_notifier(name)
       @@notifiers.delete(name)
@@ -69,15 +62,6 @@ module ExceptionNotifier
         "#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}"
       )
       false
-    end
-
-    def create_and_register_notifier(name, options)
-      notifier_classname = "#{name}_notifier".camelize
-      @@logger.info "??? #{notifier_classname}"
-      notifier_class = ExceptionNotifier.const_get(notifier_classname)
-      @@logger.info "??? #{notifier_class}"
-      notifier = notifier_class.new(options)
-      register_exception_notifier(name, notifier)
     end
   end
 end

@@ -6,7 +6,7 @@ module ExceptionNotification
 
     def initialize(app, options = {})
       @app = app
-
+      
       options.each do |notifier_name, opts|
         ExceptionNotifier.register_exception_notifier(notifier_name, opts)
       end
