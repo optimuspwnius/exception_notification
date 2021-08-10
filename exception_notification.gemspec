@@ -2,16 +2,17 @@
 
 Gem::Specification.new do |s|
   s.name = 'exception_notification'
-  s.version = '4.4.3'
-  s.summary = ''
+  s.version = '5.0.0'
+  s.summary = 'exception_notification'
+  s.authors = 'exception_notification'
   #s.files = `git ls-files`.split("\n")
   #s.files -= `git ls-files -- .??*`.split("\n")
   #s.test_files = `git ls-files -- test`.split("\n")
 
   s.require_path = 'lib'
 
-  s.add_dependency('actionmailer', '>= 4.0', '< 7')
-  s.add_dependency('activesupport', '>= 4.0', '< 7')
+  s.add_dependency('actionmailer')
+  s.add_dependency('activesupport')
 
   #s.add_development_dependency 'appraisal', '~> 2.2.0'
   #s.add_development_dependency 'aws-sdk-sns', '~> 1'
