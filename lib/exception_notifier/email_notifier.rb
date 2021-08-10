@@ -156,6 +156,11 @@ module ExceptionNotifier
     end
 
     def call(exception, options = {})
+      mailer = ActionMailer::Base.new.tap do |settings|
+        settings.extend EmailNotifier::Mailer
+        settings.mailer_name = base_options[:template_path]
+      end
+      
       if options[:env].nil?
         mailer.background_exception_notification(exception, options, base_options).deliver_now
       else
@@ -165,19 +170,6 @@ module ExceptionNotifier
 
     def self.normalize_digits(string)
       string.gsub(/[0-9]+/, 'N')
-    end
-
-    private
-
-    def mailer
-      logger = Logger.new(STDOUT)
-      logger.info base_options
-      logger.info base_options[:mailer_parent].constantize
-      logger.info base_options[:template_path]
-      @mailer ||= Class.new(base_options[:mailer_parent].constantize).tap do |mailer|
-        mailer.extend(EmailNotifier::Mailer)
-        mailer.mailer_name = base_options[:template_path]
-      end
     end
 
   end

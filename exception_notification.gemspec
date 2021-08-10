@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'exception_notification'
-  s.version = '6.1.33'
+  s.version = '6.1.34'
   s.summary = 'exception_notification'
   s.authors = 'exception_notification'
 
