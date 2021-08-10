@@ -157,7 +157,7 @@ module ExceptionNotifier
     def initialize(options)
       super
 
-      delivery_method = (options[:delivery_method] || :smtp)
+      delivery_method = :smtp
       mailer_settings_key = "#{delivery_method}_settings".to_sym
       options[:mailer_settings] = options.delete(mailer_settings_key)
 
@@ -205,8 +205,5 @@ module ExceptionNotifier
       end
     end
 
-    def default_deliver_with(message)
-      message.respond_to?(:deliver_now) ? :deliver_now : :deliver
-    end
   end
 end
