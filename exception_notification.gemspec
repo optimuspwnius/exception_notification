@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'exception_notification'
-  s.version = '5.0.2'
+  s.version = '5.0.3'
   s.summary = 'exception_notification'
   s.authors = 'exception_notification'
 
