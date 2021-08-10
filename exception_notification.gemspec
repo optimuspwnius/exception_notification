@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require File.expand_path(__dir__)
-
 Gem::Specification.new do |s|
   s.name = 'exception_notification'
   s.version = '4.4.3'
