@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module ExceptionNotifier
   class BaseNotifier
     attr_accessor :base_options

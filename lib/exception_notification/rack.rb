@@ -8,7 +8,6 @@ module ExceptionNotification
       @app = app
 
       ExceptionNotifier.tap do |en|
-        en.ignored_exceptions = options.delete(:ignore_exceptions) if options.key?(:ignore_exceptions)
         en.error_grouping = options.delete(:error_grouping) if options.key?(:error_grouping)
         en.error_grouping_period = options.delete(:error_grouping_period) if options.key?(:error_grouping_period)
         en.notification_trigger = options.delete(:notification_trigger) if options.key?(:notification_trigger)
@@ -19,24 +18,6 @@ module ExceptionNotification
           en.error_grouping_cache = Rails.cache
         end
       end
-
-      if options.key?(:ignore_if)
-        rack_ignore = options.delete(:ignore_if)
-        ExceptionNotifier.ignore_if do |exception, opts|
-          opts.key?(:env) && rack_ignore.call(opts[:env], exception)
-        end
-      end
-
-      if options.key?(:ignore_notifier_if)
-        rack_ignore_by_notifier = options.delete(:ignore_notifier_if)
-        rack_ignore_by_notifier.each do |notifier, proc|
-          ExceptionNotifier.ignore_notifier_if(notifier) do |exception, opts|
-            opts.key?(:env) && proc.call(opts[:env], exception)
-          end
-        end
-      end
-
-      ExceptionNotifier.ignore_crawlers(options.delete(:ignore_crawlers)) if options.key?(:ignore_crawlers)
 
       @ignore_cascade_pass = options.delete(:ignore_cascade_pass) { true }
 
