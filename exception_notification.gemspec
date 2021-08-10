@@ -1,8 +1,6 @@
-# frozen_string_literal: true
-
 Gem::Specification.new do |s|
   s.name = 'exception_notification'
-  s.version = '6.1.7'
+  s.version = '6.1.8'
   s.summary = 'exception_notification'
   s.authors = 'exception_notification'
 
