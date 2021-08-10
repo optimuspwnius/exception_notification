@@ -73,7 +73,9 @@ module ExceptionNotifier
 
     def create_and_register_notifier(name, options)
       notifier_classname = "#{name}_notifier".camelize
+      puts notifier_classname
       notifier_class = ExceptionNotifier.const_get(notifier_classname)
+      puts notifier_class
       notifier = notifier_class.new(options)
       register_exception_notifier(name, notifier)
     end
