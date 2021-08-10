@@ -1,4 +1,4 @@
-- session = request.session.to_hash.except('session_id')
+- session = @request.session.to_hash.except('session_id')
 
 - if session.empty?
   p No session data available.
