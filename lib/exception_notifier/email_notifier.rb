@@ -156,23 +156,19 @@ module ExceptionNotifier
     end
 
     def call(exception, options = {})
-      message = create_email(exception, options).deliver_now
-    end
-
-    def send_notice(exception, options, message, message_opts = nil)
-      yield(message, message_opts)
-    end
-
-    def create_email(exception, options = {})
       env = options[:env]
 
       send_notice(exception, options, nil, base_options) do |_, default_opts|
         if env.nil?
-          mailer.background_exception_notification(exception, options, default_opts)
+          mailer.background_exception_notification(exception, options, default_opts).deliver_now
         else
-          mailer.exception_notification(env, exception, options, default_opts)
+          mailer.exception_notification(env, exception, options, default_opts).deliver_now
         end
       end
+    end
+
+    def send_notice(exception, options, message, message_opts = nil)
+      yield(message, message_opts)
     end
 
     def self.normalize_digits(string)
