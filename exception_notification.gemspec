@@ -3,7 +3,7 @@
 Gem::Specification.new do |s|
   s.name = 'exception_notification'
   s.version = '4.4.3'
-
+  s.summary = ''
   #s.files = `git ls-files`.split("\n")
   #s.files -= `git ls-files -- .??*`.split("\n")
   #s.test_files = `git ls-files -- test`.split("\n")
