@@ -1,0 +1,5 @@
+/coverage/
+*.gemfile.lock
+/Gemfile.lock
+/.idea/
+*.code-workspace
