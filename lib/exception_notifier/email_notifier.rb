@@ -170,6 +170,9 @@ module ExceptionNotifier
     private
 
     def mailer
+      @@logger.info base_options
+      @@logger.info base_options[:mailer_parent].constantize
+      @@logger.info base_options[:template_path]
       @mailer ||= Class.new(base_options[:mailer_parent].constantize).tap do |mailer|
         mailer.extend(EmailNotifier::Mailer)
         mailer.mailer_name = base_options[:template_path]
