@@ -36,6 +36,8 @@ module ExceptionNotifier
     end
 
     def register_exception_notifier(name, options)
+      @@logger.info name
+      @@logger.info options
       @@notifiers[name] = ExceptionNotifier::EmailNotifier.new(options)
     end
 
