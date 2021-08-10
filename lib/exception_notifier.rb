@@ -4,15 +4,13 @@ require 'logger'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'exception_notifier/base_notifier'
-require 'exception_notifier/modules/error_grouping'
 
 module ExceptionNotifier
-  include ErrorGrouping
 
   autoload :BacktraceCleaner, 'exception_notifier/modules/backtrace_cleaner'
   autoload :Formatter, 'exception_notifier/modules/formatter'
 
-  autoload :Notifier, 'exception_notifier/notifier'
+  #autoload :Notifier, 'exception_notifier/notifier'
   autoload :EmailNotifier, 'exception_notifier/email_notifier'
 
   class UndefinedNotifierError < StandardError; end
@@ -26,10 +24,6 @@ module ExceptionNotifier
     @@notifiers = {}
 
     def notify_exception(exception, options = {}, &block)
-      if error_grouping
-        errors_count = group_error!(exception, options)
-        return false unless send_notification?(exception, errors_count)
-      end
 
       notification_fired = false
       selected_notifiers = options.delete(:notifiers) || notifiers
@@ -82,9 +76,6 @@ module ExceptionNotifier
       notifier_class = ExceptionNotifier.const_get(notifier_classname)
       notifier = notifier_class.new(options)
       register_exception_notifier(name, notifier)
-    rescue NameError => e
-      raise UndefinedNotifierError,
-            "No notifier named '#{name}' was found. Please, revise your configuration options. Cause: #{e.message}"
     end
   end
 end
