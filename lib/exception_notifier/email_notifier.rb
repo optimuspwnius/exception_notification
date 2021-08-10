@@ -160,10 +160,7 @@ module ExceptionNotifier
     end
 
     def send_notice(exception, options, message, message_opts = nil)
-      #_pre_callback(exception, options, message, message_opts)
-      result = yield(message, message_opts)
-      #_post_callback(exception, options, message, message_opts)
-      #result
+      yield(message, message_opts)
     end
 
     def create_email(exception, options = {})
