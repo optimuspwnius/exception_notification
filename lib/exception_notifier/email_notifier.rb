@@ -125,6 +125,8 @@ module ExceptionNotifier
           end
 
           def maybe_call(maybe_proc)
+            logger = Logger.new STDOUT
+            logger.info maybe_proc.respond_to?(:call)
             maybe_proc.respond_to?(:call) ? maybe_proc.call : maybe_proc
           end
         end
