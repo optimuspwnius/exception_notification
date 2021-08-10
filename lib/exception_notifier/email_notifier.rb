@@ -4,7 +4,7 @@ require 'action_dispatch'
 require 'pp'
 
 module ExceptionNotifier
-  class EmailNotifier < BaseNotifier
+  class EmailNotifier
     DEFAULT_OPTIONS = {
       sender_address: %("Exception Notifier" <order@alphagrounding.ca>),
       exception_recipients: ['tayden007@hotmail.com'],
@@ -148,14 +148,22 @@ module ExceptionNotifier
       end
     end
 
+    attr_accessor :base_options
+
     def initialize(options = {})
-      super
       options[:mailer_settings] = options.delete(:smtp_settings)
       @base_options = DEFAULT_OPTIONS.merge(options)
     end
 
     def call(exception, options = {})
       message = create_email(exception, options).deliver_now
+    end
+
+    def send_notice(exception, options, message, message_opts = nil)
+      #_pre_callback(exception, options, message, message_opts)
+      result = yield(message, message_opts)
+      #_post_callback(exception, options, message, message_opts)
+      #result
     end
 
     def create_email(exception, options = {})

@@ -1,5 +1,5 @@
-module ExceptionNotifier
-  class BaseNotifier
+#module ExceptionNotifier
+#  class BaseNotifier
     attr_accessor :base_options
 
     def initialize(options = {})
