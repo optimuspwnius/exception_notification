@@ -148,7 +148,7 @@ module ExceptionNotifier
       end
     end
 
-    def initialize(options)
+    def initialize(options = {})
       super
       options[:mailer_settings] = options.delete(:smtp_settings)
       @base_options = DEFAULT_OPTIONS.merge(options)
