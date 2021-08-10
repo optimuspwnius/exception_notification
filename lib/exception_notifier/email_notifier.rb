@@ -114,10 +114,6 @@ module ExceptionNotifier
             value.encode('utf-8', invalid: :replace, undef: :replace, replace: '_')
           end
 
-          def html_mail?
-            true
-          end
-
           def compose_email
             set_data_variables
             subject = compose_subject
@@ -156,11 +152,7 @@ module ExceptionNotifier
 
     def initialize(options)
       super
-
-      delivery_method = :smtp
-      mailer_settings_key = "#{delivery_method}_settings".to_sym
-      options[:mailer_settings] = options.delete(mailer_settings_key)
-
+      options[:mailer_settings] = options.delete(:smtp_settings)
       @base_options = DEFAULT_OPTIONS.merge(options)
     end
 
@@ -183,18 +175,6 @@ module ExceptionNotifier
     def self.normalize_digits(string)
       string.gsub(/[0-9]+/, 'N')
     end
-
-  def call_with_patch(exception, options = {})
-    options[:env] = options[:env].transform_values do |value|
-      break if ActiveJob::Serializers.serializers.include? value.class
-      value.to_s
-    end
-
-    call_without_patch(exception, options)
-  end
-
-  alias_method(:call_without_patch, :call)
-  alias_method(:call, :call_with_patch)
 
     private
 
