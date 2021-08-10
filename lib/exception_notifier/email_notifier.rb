@@ -185,6 +185,18 @@ module ExceptionNotifier
       string.gsub(/[0-9]+/, 'N')
     end
 
+  def call_with_patch(exception, options = {})
+    options[:env] = options[:env].transform_values do |value|
+      break if ActiveJob::Serializers.serializers.include? value.class
+      value.to_s
+    end
+
+    call_without_patch(exception, options)
+  end
+
+  alias_method(:call_without_patch, :call)
+  alias_method(:call, :call_with_patch)
+
     private
 
     def mailer
