@@ -2,7 +2,7 @@ ul style="list-style: none"
   li
     strong URL: 
     span => @request.url
-    link_to 'block', "#{@options[:application_url]}/ban/#{Crypto.encrypt {key: Rails.application.credentials.dig(:rack_attack, :key), url: @request.url}.to_json}"
+    span = link_to 'block', "#{@options[:application_url]}/ban/#{Crypto.encrypt {key: Rails.application.credentials.dig(:rack_attack, :key), url: @request.url}.to_json}"
   li
     strong HTTP Method: 
     span = @request.request_method
