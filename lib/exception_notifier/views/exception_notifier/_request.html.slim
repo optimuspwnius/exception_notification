@@ -2,14 +2,14 @@ ul style="list-style: none"
   li
     strong URL: 
     span = @request.url
-    span = link_to 'block', "#{@options[:application_url]}/ban/#{Crypto.encrypt {key: Rails.application.credentials.dig(:rack_attack, :key), url: @request.url}.to_json}"
+    a href="#{@options[:application_url]}/ban/#{Crypto.encrypt {key: Rails.application.credentials.dig(:rack_attack, :key), url: @request.url}.to_json}" block
   li
     strong HTTP Method: 
     span = @request.request_method
   li
     strong IP Address: 
     span = @request.remote_ip
-    span = link_to 'block', "#{@options[:application_url]}/ban/#{Crypto.encrypt {key: Rails.application.credentials.dig(:rack_attack, :key), ip: @request.remote_ip}.to_json}"
+    a href="#{@options[:application_url]}/ban/#{Crypto.encrypt {key: Rails.application.credentials.dig(:rack_attack, :key), ip: @request.remote_ip}.to_json}" block
   li
     strong Parameters: 
     span = @request.filtered_parameters.inspect
